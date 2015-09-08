@@ -11,6 +11,7 @@ namespace GM760_pc_util_communication_test_tool_win
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Net.NetworkInformation;
     using System.Net.Sockets;
     using System.Text;
     using System.Threading;
@@ -77,12 +78,46 @@ namespace GM760_pc_util_communication_test_tool_win
         /// </summary>
         private List<HandleClient> listHandleClient = new List<HandleClient>();
 
+        public List<string> getIPList()
+        {
+            List<String> ls = new List<string>();
+
+            string Hostname = Dns.GetHostName();//获取计算机名
+            IPHostEntry IPaddr = Dns.GetHostEntry(Hostname); //获取IP            
+
+            NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface adapter in nics)
+            {                
+                ////取得IPInterfaceProperties(可提供網路介面相關資訊)                
+                IPInterfaceProperties ipProperties = adapter.GetIPProperties();
+                if (ipProperties.UnicastAddresses.Count >=2)
+                {                    
+                    ////PhysicalAddress mac = adapter.GetPhysicalAddress();                     //取得Mac Address
+                    ////string description = adapter.Description;                               //網路介面描述
+                    IPAddress ipa = ipProperties.UnicastAddresses[1].Address;
+                    string name = adapter.Name;                                             //網路介面名稱
+                    string ip = ipa.ToString();        //取得IP
+                    ls.Add(name + "(" + ip + ")");
+                    
+                }
+                else if (ipProperties.UnicastAddresses.Count >= 1)
+                {
+                    IPAddress ipa = ipProperties.UnicastAddresses[0].Address;
+                    string name = adapter.Name;
+                    string ip = ipa.ToString();        //取得IP
+                    ls.Add(name + "(" + ip + ")");
+                }
+            }
+            return ls;
+        }        
+
         /// <summary>
         /// Initialize com Port
         /// </summary>
         /// <returns>success or fail</returns>
+        /// <param name="interfaceName">interface Name</param>
         /// <param name="port">port</param>
-        public bool Initial(int port)
+        public bool Initial(string interfaceName, int port)
         {
             ////取得本機名稱
             this.HostName = Dns.GetHostName();
@@ -93,11 +128,19 @@ namespace GM760_pc_util_communication_test_tool_win
 
             foreach (IPAddress item in ipa)
             {
+                if (interfaceName.Contains(item.ToString()))
+                {
+                    this.HostIPAddress = item;
+                    break;
+                }
+
+                /*
                 if (item.AddressFamily == AddressFamily.InterNetwork && System.Net.IPAddress.IsLoopback(item) == false)
                 {
                     this.HostIPAddress = item;
                     break;
                 }
+                */
             }
 
             this.ListenPort = port;
