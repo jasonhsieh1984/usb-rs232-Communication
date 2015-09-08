@@ -5,6 +5,7 @@
 //     v0.0.1: Jason, 2015/03/12, First coding.
 //     v0.0.2: Jason, 2015/03/18, COM PORT, WIFI, Ethernet
 //     v1.0.0: Jason, 2015/03/23, 每個命令後面增加換行符號
+//     v1.4.0: Jason, 2015/04/09, 手動選擇網路、傳輸格式="wifi,eth,wifi port,eth port,date"
 // </copyright>
 // -----------------------------------------------------------------------
 namespace GM760_pc_util_communication_test_tool_win
@@ -36,7 +37,7 @@ namespace GM760_pc_util_communication_test_tool_win
         /// <summary>
         /// Version Description
         /// </summary>
-        private string strVersion = "v1.0.0";
+        private string strVersion = "v1.4.0";
 
         /// <summary>
         /// Boolean network is opened
@@ -83,8 +84,11 @@ namespace GM760_pc_util_communication_test_tool_win
             this.Text += " " + this.strVersion;
             this.CenterToScreen();
             this.bNetworkOpen = false;
+            this.BtnSimulate.Visible = true;
             this.txtEthernetPort.ReadOnly = true;
             this.txtWifiPort.ReadOnly = true;
+
+            this.refreshIPList();
 
             this.lastComPortList = new ArrayList();
 
@@ -204,6 +208,32 @@ namespace GM760_pc_util_communication_test_tool_win
                 }
             }
         }
+
+        /// <summary>
+        /// refresh IP List 
+        /// </summary>
+        private void refreshIPList()
+        {
+            List<string> ls = this.ethernetServer.getIPList();
+
+            this.LbWifiList.Items.Clear();
+            this.LbEthernetList.Items.Clear();
+
+            foreach (string str in ls)
+            {
+                if (!this.FindKeyword(str, "VMWare") && !this.FindKeyword(str, "Loopback") && !this.FindKeyword(str, "isatap"))
+                {
+                    this.LbWifiList.Items.Add(str);
+                    this.LbEthernetList.Items.Add(str);
+                }
+            }
+
+            if (this.LbWifiList.Items.Count > 0)
+            {
+                this.LbWifiList.SelectedIndex = 0;
+                this.LbEthernetList.SelectedIndex = 0;
+            }
+        }
         
         /// <summary>
         /// Add Meter to system 
@@ -308,8 +338,9 @@ namespace GM760_pc_util_communication_test_tool_win
                 {
                     if (this.FindKeyword(message, item.Tag))
                     {
-                        string info = this.wifiServer.HostIPAddress.ToString() + "," + this.wifiServer.ListenPort.ToString() + ","
-                            + this.ethernetServer.ListenPort.ToString() + "," + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\n";
+                        string info = this.wifiServer.HostIPAddress.ToString() + "," + this.ethernetServer.HostIPAddress.ToString() 
+                            + "," + this.wifiServer.ListenPort.ToString() + "," + this.ethernetServer.ListenPort.ToString() 
+                            + "," + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\n";
                         item.Send(info);
                         break;
                     }
@@ -373,15 +404,18 @@ namespace GM760_pc_util_communication_test_tool_win
                 return;
             }
 
-            this.ethernetServer.Initial(Convert.ToInt32(this.txtEthernetPort.Text));
-            this.wifiServer.Initial(Convert.ToInt32(this.txtWifiPort.Text));
-            this.ethernetServer.StartListen();
+            
+            this.wifiServer.Initial(this.LbWifiList.SelectedItem.ToString(), Convert.ToInt32(this.txtWifiPort.Text));
+            this.ethernetServer.Initial(this.LbEthernetList.SelectedItem.ToString(), Convert.ToInt32(this.txtEthernetPort.Text));
+
             this.wifiServer.StartListen();
+            this.ethernetServer.StartListen();
 
             this.PushMessage("Host Name= " + this.ethernetServer.HostName);
-            this.PushMessage("IP Address= " + this.ethernetServer.HostIPAddress.ToString());
-            this.PushMessage("Ethernet Port= " + this.ethernetServer.ListenPort);
+            this.PushMessage("WIFI IP Address= " + this.wifiServer.HostIPAddress.ToString());            
             this.PushMessage("WIFI Port= " + this.wifiServer.ListenPort);
+            this.PushMessage("Ethernet IP Address= " + this.ethernetServer.HostIPAddress.ToString());
+            this.PushMessage("Ethernet Port= " + this.ethernetServer.ListenPort);
             this.PushMessage("開始監聽");
 
             this.bNetworkOpen = true;
@@ -419,6 +453,7 @@ namespace GM760_pc_util_communication_test_tool_win
             {
                 this.txtEthernetPort.ReadOnly = false;
                 this.txtWifiPort.ReadOnly = false;
+                this.BtnSimulate.Visible = true;
                 MessageBox.Show("開啟PORT修改功能。");
             }
         }

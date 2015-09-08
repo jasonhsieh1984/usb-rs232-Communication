@@ -30,7 +30,7 @@
         {
             this.txtHistory = new System.Windows.Forms.TextBox();
             this.grpBoxHistory = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.BtnSimulate = new System.Windows.Forms.Button();
             this.BtnOpenNetwork = new System.Windows.Forms.Button();
             this.BtnCloseNetwork = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -39,6 +39,10 @@
             this.txtEthernetPort = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.lblHint = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.LbWifiList = new System.Windows.Forms.ListBox();
+            this.LbEthernetList = new System.Windows.Forms.ListBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.grpBoxHistory.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,7 +54,7 @@
             this.txtHistory.Name = "txtHistory";
             this.txtHistory.ReadOnly = true;
             this.txtHistory.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtHistory.Size = new System.Drawing.Size(572, 231);
+            this.txtHistory.Size = new System.Drawing.Size(336, 231);
             this.txtHistory.TabIndex = 0;
             // 
             // grpBoxHistory
@@ -58,24 +62,24 @@
             this.grpBoxHistory.Controls.Add(this.txtHistory);
             this.grpBoxHistory.Location = new System.Drawing.Point(12, 65);
             this.grpBoxHistory.Name = "grpBoxHistory";
-            this.grpBoxHistory.Size = new System.Drawing.Size(585, 265);
+            this.grpBoxHistory.Size = new System.Drawing.Size(349, 265);
             this.grpBoxHistory.TabIndex = 2;
             this.grpBoxHistory.TabStop = false;
             this.grpBoxHistory.Text = "歷史訊息";
             // 
-            // button1
+            // BtnSimulate
             // 
-            this.button1.Location = new System.Drawing.Point(501, 350);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(90, 48);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "Simulate";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.BtnSimulate.Location = new System.Drawing.Point(614, 356);
+            this.BtnSimulate.Name = "BtnSimulate";
+            this.BtnSimulate.Size = new System.Drawing.Size(90, 48);
+            this.BtnSimulate.TabIndex = 3;
+            this.BtnSimulate.Text = "Simulate";
+            this.BtnSimulate.UseVisualStyleBackColor = true;
+            this.BtnSimulate.Click += new System.EventHandler(this.button1_Click);
             // 
             // BtnOpenNetwork
             // 
-            this.BtnOpenNetwork.Location = new System.Drawing.Point(270, 350);
+            this.BtnOpenNetwork.Location = new System.Drawing.Point(386, 355);
             this.BtnOpenNetwork.Name = "BtnOpenNetwork";
             this.BtnOpenNetwork.Size = new System.Drawing.Size(91, 50);
             this.BtnOpenNetwork.TabIndex = 4;
@@ -85,7 +89,7 @@
             // 
             // BtnCloseNetwork
             // 
-            this.BtnCloseNetwork.Location = new System.Drawing.Point(386, 350);
+            this.BtnCloseNetwork.Location = new System.Drawing.Point(502, 355);
             this.BtnCloseNetwork.Name = "BtnCloseNetwork";
             this.BtnCloseNetwork.Size = new System.Drawing.Size(91, 50);
             this.BtnCloseNetwork.TabIndex = 5;
@@ -149,11 +153,55 @@
             this.lblHint.TabIndex = 11;
             this.lblHint.Text = "lblHint";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(382, 65);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(43, 20);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "WIFI";
+            // 
+            // LbWifiList
+            // 
+            this.LbWifiList.FormattingEnabled = true;
+            this.LbWifiList.HorizontalScrollbar = true;
+            this.LbWifiList.ItemHeight = 20;
+            this.LbWifiList.Location = new System.Drawing.Point(386, 93);
+            this.LbWifiList.Name = "LbWifiList";
+            this.LbWifiList.ScrollAlwaysVisible = true;
+            this.LbWifiList.Size = new System.Drawing.Size(347, 104);
+            this.LbWifiList.TabIndex = 13;
+            // 
+            // LbEthernetList
+            // 
+            this.LbEthernetList.FormattingEnabled = true;
+            this.LbEthernetList.HorizontalScrollbar = true;
+            this.LbEthernetList.ItemHeight = 20;
+            this.LbEthernetList.Location = new System.Drawing.Point(386, 240);
+            this.LbEthernetList.Name = "LbEthernetList";
+            this.LbEthernetList.ScrollAlwaysVisible = true;
+            this.LbEthernetList.Size = new System.Drawing.Size(347, 104);
+            this.LbEthernetList.TabIndex = 15;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(382, 212);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(73, 20);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "區域網路";
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(607, 424);
+            this.ClientSize = new System.Drawing.Size(738, 424);
+            this.Controls.Add(this.LbEthernetList);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.LbWifiList);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.lblHint);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtEthernetPort);
@@ -162,7 +210,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.BtnCloseNetwork);
             this.Controls.Add(this.BtnOpenNetwork);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.BtnSimulate);
             this.Controls.Add(this.grpBoxHistory);
             this.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
@@ -185,7 +233,7 @@
 
         private System.Windows.Forms.TextBox txtHistory;
         private System.Windows.Forms.GroupBox grpBoxHistory;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button BtnSimulate;
         private System.Windows.Forms.Button BtnOpenNetwork;
         private System.Windows.Forms.Button BtnCloseNetwork;
         private System.Windows.Forms.Label label1;
@@ -194,6 +242,10 @@
         private System.Windows.Forms.TextBox txtEthernetPort;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblHint;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ListBox LbWifiList;
+        private System.Windows.Forms.ListBox LbEthernetList;
+        private System.Windows.Forms.Label label5;
     }
 }
 
